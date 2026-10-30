@@ -2,7 +2,7 @@
 
 ## Home
 
-- Dock: A compact floating tray fits up to nine app icons. Icons mode reveals the focused name above the tray; Both adds small labels below each icon, and Text remains available. Left/Right moves through the apps without wrapping, scrolling when a text row overflows. Up enters the top-right controls, starting with Art Mode or the last selected control. Left/Right moves between Art Mode, All apps and Settings. Down or Back returns to the selected app. The clock is at the top left.
+- Dock: A shallow floating tray sits near the bottom edge and fits up to nine tightly spaced app icons. Icons mode reveals the focused name above the tray; Both adds small labels below each icon, and Text remains available. Left/Right moves through the apps without wrapping, scrolling when a text row overflows. Up enters the top-right controls, starting with Art Mode or the last selected control. Left/Right moves between Art Mode, All apps and Settings. Down or Back returns to the selected app. The clock is at the top left.
 - List: Up/Down scrolls the apps without wrapping. Right enters the bottom-right controls, aligned with the clock above. Up/Down moves between Art Mode, All apps and Settings. Left or Back returns to the selected app. The list fades at both ends as it scrolls.
 - OK opens the selected item. Focus alone never launches an app.
 - Icons-only apps and controls reveal their names when focused. App presentation and control presentation are independent.
