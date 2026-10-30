@@ -647,8 +647,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 
 /* Transparent liquid-glass tray: registered wallpaper lens, no corner glints. */
 .dock .mat{border-radius:24px}
-.bg-photo .dock .mat{background:rgba(218,228,240,.035);box-shadow:0 8px 22px rgba(0,0,0,.12)}
-.bg-photo .dock .mat-img{opacity:.84;transform:scale(1.045,1.12)}
+.bg-photo .dock .mat{background:linear-gradient(to bottom,rgba(238,243,250,.17),rgba(221,231,244,.09));box-shadow:0 8px 22px rgba(0,0,0,.12)}
+.bg-photo .dock .mat-img{opacity:.32;transform:scale(1.045,1.12)}
+.bg-photo .dock .mat-scrim,.bg-photo .dock .mat-veil{display:none}
 .bg-photo .dock .mat::after{box-shadow:none;background:linear-gradient(to right,transparent,rgba(255,255,255,.22) 25%,rgba(255,255,255,.22) 75%,transparent) center top/100% 1px no-repeat,linear-gradient(to right,transparent,rgba(255,255,255,.09) 25%,rgba(255,255,255,.09) 75%,transparent) center bottom/100% 1px no-repeat,linear-gradient(to bottom,rgba(225,237,255,.07),transparent 30%,transparent 70%,rgba(225,237,255,.025))}
 .dock .tile{border-radius:28px}
 .dock .tile .mark{left:calc((var(--tile-w) - 80px)/2);top:4px}

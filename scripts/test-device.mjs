@@ -77,10 +77,14 @@ test('Tizenbrew Next reuses the YouTube mark and retains its native launch targe
   h.requests[0].ok([
     { id: '9Ur5IzDKqV.TizenYouTube', name: 'YouTube', show: true },
     { id: 'Next123456.Client', name: 'Tizenbrew Next', show: true },
+    { id: 'NextGen123.Client', name: 'TizenBrewNextGeneration', show: true },
+    { id: 'TubeNext12.Client', name: 'TizenTube Next', show: true },
     { id: 'Other12345.Client', name: 'Tizenbrew', show: true }
   ]);
   const next = apps.find(a => a.name === 'Tizenbrew Next');
   assert.equal(next.brand, 'youtube');
+  assert.equal(apps.find(a => a.name === 'TizenBrewNextGeneration').brand, 'youtube');
+  assert.equal(apps.find(a => a.name === 'TizenTube Next').brand, 'youtube');
   assert.equal(next.appId, 'Next123456.Client');
   assert.equal(apps.find(a => a.name === 'YouTube').brand, 'youtube');
   assert.equal(apps.find(a => a.name === 'Tizenbrew').brand, '');

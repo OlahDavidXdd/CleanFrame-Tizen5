@@ -6,7 +6,7 @@ on:
       tag:
         description: Release tag matching the package version
         required: true
-        default: v0.6.3
+        default: v0.6.4
 
 permissions:
   contents: write
@@ -51,7 +51,7 @@ jobs:
           RELEASE_TAG: ${{ inputs.tag }}
         run: |
           cat > /tmp/notes.md <<'NOTES'
-          CleanFrame 0.6.3 adds White, Light and Dark icon options under Settings → Layout, AquaPlay IPTV artwork, and a compact transparent liquid-glass Dock with a static refraction effect, no corner lights, and a centered selector. Tizenbrew Next retains the YouTube icon. Your wallpaper and rotation preferences are preserved.
+          CleanFrame 0.6.4 fixes YouTube artwork for Tizenbrew Next Generation and TizenTube Next, including saved pins, and lightens the Dock to a translucent Mac-style tray without corner lights. It includes White, Light and Dark icon options under Settings → Layout, AquaPlay IPTV artwork, and a compact transparent liquid-glass Dock with a static refraction effect, no corner lights, and a centered selector. Tizenbrew Next retains the YouTube icon. Your wallpaper and rotation preferences are preserved.
 
           Download CleanFrame-public-unsigned.wgt. This widget is unsigned and contains public fonts only. Sign with your own Tizen certificates, or use an installer that signs widgets, before installation. See the included notices for asset terms. No signing credentials or TV access were used to build this package.
 
