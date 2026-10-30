@@ -38,3 +38,9 @@ The retained generator covers all fifteen filenames and writes `.local/materials
 For another photo, add its source/credit to `SOURCES.json`, prepare its background and thumbnail, add the gallery entry in `catalog.js`, generate the four registered materials and panel backdrop, then measure and review its foreground metadata. Keep the crop identical across all assets. Run source and browser checks before packaging.
 
 Source pages and licence observations are recorded in [asset sources](asset-sources.md).
+
+## App icon appearance
+
+`python3 scripts/build-app-icons.py` generates the bundled Light/Dark rounded-square tiles from existing SVG service marks. These are iOS-inspired adaptations, not proprietary icon assets extracted from an Apple device. The AquaPlay TV/play glyph is an original drawing. White uses the original standalone marks; Tizenbrew Next reuses YouTube in every mode. Keep asset source notices beside the generated files. No image sampling, live blur or filters run on the TV.
+
+The compact Dock uses a transparent shell and a slightly stretched registered wallpaper field for its liquid-glass lens effect. Horizontal edge reflections fade before the corners; there are no corner flares. This is a static composited approximation of refraction, with no live blur or pixel sampling. Reduced motion keeps the registered field untransformed.

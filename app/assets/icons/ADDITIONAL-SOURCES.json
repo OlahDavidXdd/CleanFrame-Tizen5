@@ -22,5 +22,11 @@
     "source": "https://github.com/simple-icons/simple-icons/blob/develop/icons/appstore.svg",
     "licence": "CC0-1.0",
     "note": "Shape unchanged; white fill for launcher. Used for Apps2Samsung TV-Store at the owner\u2019s request."
+  },
+  {
+    "icon": "aquaplay",
+    "source": "Original CleanFrame TV-and-play drawing",
+    "licence": "MIT",
+    "note": "Original Apple-inspired television outline, pedestal and play triangle for AquaPlay IPTV. Light/Dark tiles are generated from local bundled marks; their source licences remain unchanged."
   }
 ]

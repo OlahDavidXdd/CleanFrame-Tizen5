@@ -103,6 +103,20 @@ test('TV-Store recognizes the upstream ID and excludes its background service', 
   assert.equal(h.launches[0].id, 'A2STVStore.Store');
 });
 
+test('AquaPlay IPTV keeps its discovered ID even with a renamed package', () => {
+  const h = harness();
+  let apps;
+  h.device.apps((error, value) => { assert.equal(error, null); apps = value; });
+  h.requests[0].ok([
+    { id: 'remapped.AquaPlayer', name: 'AquaPlay IPTV', show: true },
+    { id: 'Service123.Worker', name: 'AquaPlay IPTV service', show: true }
+  ]);
+  assert.equal(apps.length, 1);
+  assert.equal(apps[0].brand, 'aquaplay');
+  h.device.launchApp(apps[0].appId, () => {});
+  assert.equal(h.launches[0].id, 'remapped.AquaPlayer');
+});
+
 test('launch keeps its eight-second deadline independently of discovery', () => {
   const h = harness(), results = [];
   h.device.launchApp('Synthetic.App', error => results.push(error));
