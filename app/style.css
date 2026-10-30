@@ -655,7 +655,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 .dock .tile .label{font-size:28px;line-height:36px;letter-spacing:-.4px}
 .dock .tile.is-focus .mark,.dock .tile.is-lifted .mark{transform:translateY(-6px) scale(1.10)}
 .dock .tile .mark.app-icon{opacity:1}
-.dock .plate{left:calc((var(--tile-w) - 88px)/2);top:0;width:88px;height:88px;border-radius:22px}
+.dock .plate{left:calc((var(--tile-w) - 88px)/2);top:16px;width:88px;height:88px;border-radius:22px}
 .bg-photo .dock .plate.on-focus,.bg-photo.db-quiet .dock .plate.on-focus{background:rgba(172,180,191,.13);box-shadow:none}
 .a-text .dock .plate{left:0;top:16px;width:var(--tile-w);height:var(--tile-h);border-radius:24px}
 .dock .tile .add{left:calc((var(--tile-w) - 56px)/2);top:16px}
@@ -664,3 +664,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 .bg-dark .dock .mat{background:rgba(255,255,255,.055);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 14px 40px rgba(0,0,0,.18)}
 .bg-light .dock .mat{background:rgba(255,255,255,.52);box-shadow:inset 0 1px 0 rgba(255,255,255,.65),0 8px 30px rgba(0,0,0,.08)}
 .bg-dark .dock .mat-img,.bg-light .dock .mat-img,.bg-dark .dock .mat-scrim,.bg-light .dock .mat-scrim,.bg-dark .dock .mat-veil,.bg-light .dock .mat-veil{display:none}
+
+/* The plate shares the tile’s 16px inset; focused artwork lifts by 6px. */
+.dock .plate.on-focus,.dock .plate.on-lift{top:10px}
+.a-text .dock .plate.on-focus,.a-text .dock .plate.on-lift{top:16px}
+@media(prefers-reduced-motion:reduce){.dock .plate.on-focus,.dock .plate.on-lift{top:16px}}
