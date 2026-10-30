@@ -645,11 +645,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 .bg-photo .dock .mat::after{border-radius:inherit;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
 .bg-photo .dock .plate.on-focus,.bg-photo.db-quiet .dock .plate.on-focus{background:rgba(172,180,191,.22);box-shadow:none}
 
-/* Shallow Mac-style tray with tightly spaced artwork and a quiet glass rim. */
+/* Transparent liquid-glass tray: registered wallpaper lens, no corner glints. */
 .dock .mat{border-radius:24px}
-.bg-photo .dock .mat{background:rgba(218,220,225,.18);box-shadow:0 8px 22px rgba(0,0,0,.16)}
-.bg-photo .dock .mat-img{opacity:.52}
-.bg-photo .dock .mat::after{box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -1px 0 rgba(255,255,255,.05)}
+.bg-photo .dock .mat{background:rgba(218,228,240,.035);box-shadow:0 8px 22px rgba(0,0,0,.12)}
+.bg-photo .dock .mat-img{opacity:.84;transform:scale(1.045,1.12)}
+.bg-photo .dock .mat::after{box-shadow:none;background:linear-gradient(to right,transparent,rgba(255,255,255,.22) 25%,rgba(255,255,255,.22) 75%,transparent) center top/100% 1px no-repeat,linear-gradient(to right,transparent,rgba(255,255,255,.09) 25%,rgba(255,255,255,.09) 75%,transparent) center bottom/100% 1px no-repeat,linear-gradient(to bottom,rgba(225,237,255,.07),transparent 30%,transparent 70%,rgba(225,237,255,.025))}
 .dock .tile{border-radius:28px}
 .dock .tile .mark{left:calc((var(--tile-w) - 80px)/2);top:4px}
 .dock .tile .label{font-size:28px;line-height:36px;letter-spacing:-.4px}

@@ -42,3 +42,5 @@ Source pages and licence observations are recorded in [asset sources](asset-sour
 ## App icon appearance
 
 `python3 scripts/build-app-icons.py` generates the bundled Light/Dark rounded-square tiles from existing SVG service marks. These are iOS-inspired adaptations, not proprietary icon assets extracted from an Apple device. The AquaPlay TV/play glyph is an original drawing. White uses the original standalone marks; Tizenbrew Next reuses YouTube in every mode. Keep asset source notices beside the generated files. No image sampling, live blur or filters run on the TV.
+
+The compact Dock uses a transparent shell and a slightly stretched registered wallpaper field for its liquid-glass lens effect. Horizontal edge reflections fade before the corners; there are no corner flares. This is a static composited approximation of refraction, with no live blur or pixel sampling. Reduced motion keeps the registered field untransformed.
