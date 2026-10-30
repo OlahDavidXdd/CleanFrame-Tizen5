@@ -421,6 +421,28 @@ try {
     await scene('home'); await act('home.app.netflix'); await current.waitForFunction(() => ShoreQA.where().view === 'message');
     check('Launch failure is shown', /could not|unavailable|try again/i.test(await current.locator('#stage').innerText()));
   });
+  await run('Tizenbrew Next shares the stock YouTube icon', async () => {
+    const nextId = 'Next123456.Client';
+    await page({ catalog: CATALOG.concat({ id: nextId, name: 'Tizenbrew Next', show: true }) });
+    await library();
+    check('Stock YouTube and Next remain separate apps', (await state()).catalog.ids.includes('youtube') && (await state()).catalog.ids.includes(nextId));
+    const tile = current.locator('[data-action="apps.open.' + nextId + '"]');
+    check('Next retains its name and bundled YouTube mark', (await tile.innerText()).includes('Tizenbrew Next') && (await tile.innerHTML()).includes('assets/icons/youtube.svg'));
+    await act('apps.open.' + nextId);
+    await current.waitForFunction(() => __tv.calls.length > 0);
+    check('Next launches its own native ID', (await current.evaluate(() => __tv.calls.at(-1))).id === nextId);
+    await closePage();
+    await page({ catalogFailure: true, seed: baseline({
+      home: ['youtube', nextId],
+      appRecords: [{ id: nextId, appId: nextId, name: 'Tizenbrew Next', brand: 'youtube' }]
+    }) });
+    for (const layout of ['dock', 'list']) {
+      await look({ layout, apps: 'both', bg: 'dark' });
+      const homeTile = current.locator('[data-action="home.app.' + nextId + '"]:visible');
+      check('Saved Next keeps its YouTube mark in ' + layout, (await homeTile.innerHTML()).includes('assets/icons/youtube.svg') && (await homeTile.innerText()).includes('Tizenbrew Next'));
+      await current.screenshot({ path: out + 'tizenbrew-next-' + layout + '.png' });
+    }
+  });
   await run('Independent app identity self-filter', async () => {
     const appId = 'AbCdEf1234.MyHome';
     await page({ currentAppId: appId, catalog: CATALOG.filter(a => a.id !== 'nClrkHome1.FrameHome').concat({ id: appId, name: 'Family Home', show: true }) });

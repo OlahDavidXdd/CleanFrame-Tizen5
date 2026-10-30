@@ -70,6 +70,24 @@ test('regional streaming apps stay distinct and system helpers stay hidden', () 
   assert.equal(apps.find(a => a.name === 'HBO Max').brand, 'hbomax');
 });
 
+test('Tizenbrew Next reuses the YouTube mark and retains its native launch target', () => {
+  const h = harness();
+  let apps;
+  h.device.apps((error, value) => { assert.equal(error, null); apps = value; });
+  h.requests[0].ok([
+    { id: '9Ur5IzDKqV.TizenYouTube', name: 'YouTube', show: true },
+    { id: 'Next123456.Client', name: 'Tizenbrew Next', show: true },
+    { id: 'Other12345.Client', name: 'Tizenbrew', show: true }
+  ]);
+  const next = apps.find(a => a.name === 'Tizenbrew Next');
+  assert.equal(next.brand, 'youtube');
+  assert.equal(next.appId, 'Next123456.Client');
+  assert.equal(apps.find(a => a.name === 'YouTube').brand, 'youtube');
+  assert.equal(apps.find(a => a.name === 'Tizenbrew').brand, '');
+  h.device.launchApp(next.appId, () => {});
+  assert.equal(h.launches[0].id, next.appId);
+});
+
 test('launch keeps its eight-second deadline independently of discovery', () => {
   const h = harness(), results = [];
   h.device.launchApp('Synthetic.App', error => results.push(error));
