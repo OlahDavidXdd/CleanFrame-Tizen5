@@ -29,7 +29,7 @@
   var ADAPTIVE_INK = window.CleanFrameAdaptiveInk || {};
   WALLS.forEach(function (w) { w.ut = w.ut || { tr: 'light', br: 'light' }; w.frostVeil = w.frostVeil || .12; });
   var MODES = [
-    { id: 'fixed', name: 'Fixed', min: 0 }, { id: 'open', name: 'Each time Home opens', min: 0 },
+    { id: 'fixed', name: 'Off — keep this wallpaper', min: 0 }, { id: 'open', name: 'Each time Home opens', min: 0 },
     { id: '5', name: 'Every 5 minutes', min: 5 }, { id: '15', name: 'Every 15 minutes', min: 15 },
     { id: '60', name: 'Every hour', min: 60 }
   ];
@@ -331,7 +331,7 @@
     var legacyList = s.theme === 'list', h = [], recent = [], records = Array.isArray(s.appRecords) ? s.appRecords : [];
     records.slice(0, 256).forEach(function (a) {
       if (!a || !safeId(a.id) || !safeId(a.appId) || typeof a.name !== 'string' || !a.name.trim() || app(a.id)) return;
-      APPS.push({ id: a.id, appId: a.appId, name: a.name.slice(0, 160), brand: ['hbomax', 'spotify', 'tubi'].indexOf(a.brand) >= 0 ? a.brand : '', mark: ['hbomax', 'spotify', 'tubi'].indexOf(a.brand) >= 0, icon: safeIcon(a.icon) });
+      APPS.push({ id: a.id, appId: a.appId, name: a.name.slice(0, 160), brand: ['hbomax', 'spotify', 'tubi', 'youtube', 'appstore'].indexOf(a.brand) >= 0 ? a.brand : '', mark: ['hbomax', 'spotify', 'tubi', 'youtube', 'appstore'].indexOf(a.brand) >= 0, icon: safeIcon(a.icon) });
     });
     (Array.isArray(s.home) ? s.home : Array.isArray(s.dock) ? s.dock : []).forEach(function (id) {
       if (!safeId(id) || h.indexOf(id) >= 0 || h.length >= CAP) return;
@@ -474,7 +474,8 @@
       oldFocus = top().id === 'apps' ? ALPHA[top().f.i] : null;
       ALPHA = [];
       entries.forEach(function (entry) {
-        var id = PRIMARY.indexOf(entry.brand) >= 0 ? entry.brand : entry.appId, a;
+        var primaryIndex = PRIMARY.indexOf(entry.brand);
+        var id = primaryIndex >= 0 && PRIMARY_APPS[primaryIndex].appId === entry.appId ? entry.brand : entry.appId, a;
         if (!safeId(id) || !safeId(entry.appId) || ALPHA.indexOf(id) >= 0) return;
         a = app(id);
         if (!a) { a = { id: id }; APPS.push(a); }
@@ -866,7 +867,7 @@
         reason: inactive ? flat ? 'Materials are available with a Photo background.' : 'Choose Glass focus or the Dock layout to use materials.' : '' }
     ];
     if (t.group === 'rotation') return [{ id: 'mode', title: '', items: options('mode', MODES.map(function (m) { return m.id; }), flat),
-      reason: flat ? 'Choose Photo in Background to use rotation.' : 'Timed changes pause while Settings or another panel is open.' }];
+      reason: flat ? 'Choose Photo in Background to use rotation.' : 'Off keeps your chosen wallpaper until you change it, including after restarting CleanFrame. Timed changes pause in panels.' }];
     return [{ id: 'samsung', title: '', items: [
       { action: 'samsung.home', label: 'Samsung Home', description: 'Open Samsung’s Home screen' },
       { action: 'samsung.settings', label: 'TV settings', description: 'Picture, sound and network settings' }

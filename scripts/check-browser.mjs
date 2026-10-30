@@ -421,6 +421,55 @@ try {
     await scene('home'); await act('home.app.netflix'); await current.waitForFunction(() => ShoreQA.where().view === 'message');
     check('Launch failure is shown', /could not|unavailable|try again/i.test(await current.locator('#stage').innerText()));
   });
+  await run('Tizenbrew Next shares the stock YouTube icon', async () => {
+    const nextId = 'Next123456.Client';
+    await page({ catalog: CATALOG.concat({ id: nextId, name: 'Tizenbrew Next', show: true }) });
+    await library();
+    check('Stock YouTube and Next remain separate apps', (await state()).catalog.ids.includes('youtube') && (await state()).catalog.ids.includes(nextId));
+    const tile = current.locator('[data-action="apps.open.' + nextId + '"]');
+    check('Next retains its name and bundled YouTube mark', (await tile.innerText()).includes('Tizenbrew Next') && (await tile.innerHTML()).includes('assets/icons/youtube.svg'));
+    await act('apps.open.' + nextId);
+    await current.waitForFunction(() => __tv.calls.length > 0);
+    check('Next launches its own native ID', (await current.evaluate(() => __tv.calls.at(-1))).id === nextId);
+    await closePage();
+    await page({ catalogFailure: true, seed: baseline({
+      home: ['youtube', nextId],
+      appRecords: [{ id: nextId, appId: nextId, name: 'Tizenbrew Next', brand: 'youtube' }]
+    }) });
+    for (const layout of ['dock', 'list']) {
+      await look({ layout, apps: 'both', bg: 'dark' });
+      const homeTile = current.locator('[data-action="home.app.' + nextId + '"]:visible');
+      check('Saved Next keeps its YouTube mark in ' + layout, (await homeTile.innerHTML()).includes('assets/icons/youtube.svg') && (await homeTile.innerText()).includes('Tizenbrew Next'));
+      await current.screenshot({ path: out + 'tizenbrew-next-' + layout + '.png' });
+    }
+  });
+  await run('TV-Store uses a monochrome App Store mark', async () => {
+    const storeId = 'A2STVStore.Store', storeName = 'Apps2Samsung TV-Store';
+    await page({ catalog: CATALOG.concat([
+      { id: storeId, name: storeName, show: true },
+      { id: 'A2STVStore.sdbservice', name: 'TV-Store service', show: true }
+    ]) });
+    await library();
+    check('Upstream TV-Store is discoverable without its service', (await state()).catalog.ids.includes(storeId) && !(await state()).catalog.ids.includes('A2STVStore.sdbservice'));
+    const tile = current.locator('[data-action="apps.open.' + storeId + '"]');
+    check('Store uses bundled App Store mark with upstream name', (await tile.innerText()).includes(storeName) && (await tile.innerHTML()).includes('assets/icons/appstore.svg'));
+    await act('apps.open.' + storeId);
+    await current.waitForFunction(() => __tv.calls.length > 0);
+    check('Store launches upstream native ID', (await current.evaluate(() => __tv.calls.at(-1))).id === storeId);
+    await closePage();
+    await page({ catalogFailure: true, seed: baseline({
+      home: ['youtube', storeId],
+      appRecords: [{ id: storeId, appId: storeId, name: storeName, brand: 'appstore' }]
+    }) });
+    for (const layout of ['dock', 'list']) {
+      for (const bg of ['dark', 'light']) {
+        await look({ layout, apps: 'both', bg });
+        const homeTile = current.locator('[data-action="home.app.' + storeId + '"]:visible');
+        check('Saved store retains the App Store mark in ' + layout + '/' + bg, (await homeTile.innerHTML()).includes('assets/icons/appstore.svg') && (await homeTile.innerText()).includes(storeName));
+        await current.screenshot({ path: out + 'tv-store-' + layout + '-' + bg + '.png' });
+      }
+    }
+  });
   await run('Independent app identity self-filter', async () => {
     const appId = 'AbCdEf1234.MyHome';
     await page({ currentAppId: appId, catalog: CATALOG.filter(a => a.id !== 'nClrkHome1.FrameHome').concat({ id: appId, name: 'Family Home', show: true }) });
@@ -990,6 +1039,31 @@ try {
     check('Held Back closes one layer only', (await call('where')).view === 'settings' && (await state()).focusAction === 'settings.editor');
     await current.keyboard.up('Escape'); await current.keyboard.press('Escape');
     check('Released Back reaches Home', (await call('where')).view === 'home');
+  });
+  await run('Desert wallpaper stays fixed across restarts', async () => {
+    await page({ minuteMs: 50, seed: baseline({ mode: '5' }) });
+    await wallpaper();
+    const candidate = current.locator('[data-action="wallpaper.choose.desert-night"]');
+    check('User photo appears as a selectable wallpaper', await candidate.count() === 1);
+    await nav(...Array(walls.length).fill('down')); await wallpaperSettled('desert-night');
+    await nav('ok'); await ready();
+    check('Selecting the photo saves its complete material bundle', (await stored()).wall === 'desert-night' && Object.values(await wallpaperBundle()).every(src => src.includes('/desert-night')));
+    await nav('back'); await act('background.rotation');
+    check('No-rotation choice is explicit', (await current.locator('[data-action="rotation.fixed"]').innerText()).includes('Off — keep this wallpaper'));
+    await act('rotation.fixed'); await scene('home');
+    await current.waitForTimeout(800);
+    check('Turning rotation off cancels the previous timer', (await state()).wallpaper === 'desert-night' && !(await state()).rotation.active && (await stored()).mode === 'fixed');
+    await current.reload(); await ready();
+    await current.waitForTimeout(800);
+    check('Restart retains the photo with rotation off', (await state()).wallpaper === 'desert-night' && (await state()).mode === 'fixed' && !(await state()).rotation.active);
+    await current.evaluate(() => { __setHidden(true); __setHidden(false); window.dispatchEvent(new Event('focus')); });
+    check('Returning Home does not replace the fixed photo', (await state()).wallpaper === 'desert-night');
+    for (const layout of ['list', 'dock']) {
+      for (const material of ['soft', 'frost', 'tint']) {
+        await look({ layout, material, focus: 'glass' });
+        await current.screenshot({ path: out + 'desert-night-' + layout + '-' + material + '.png' });
+      }
+    }
   });
   await run('Rotation pauses and warm return', async () => {
     await page({ minuteMs: 120 });
