@@ -6,7 +6,7 @@ on:
       tag:
         description: Release tag matching the package version
         required: true
-        default: v0.6.2
+        default: v0.6.3
 
 permissions:
   contents: write
@@ -51,10 +51,10 @@ jobs:
           RELEASE_TAG: ${{ inputs.tag }}
         run: |
           cat > /tmp/notes.md <<'NOTES'
-          CleanFrame 0.6.2 includes matching Tizenbrew Next and TV-Store icons, the selectable Desert at night wallpaper, and Off — keep this wallpaper for persistent wallpaper selection without rotation.
+          CleanFrame 0.6.3 adds White, Light and Dark icon options under Settings → Layout, AquaPlay IPTV artwork, and a compact transparent liquid-glass Dock with a static refraction effect, no corner lights, and a centered selector. Tizenbrew Next retains the YouTube icon. Your wallpaper and rotation preferences are preserved.
 
           Download CleanFrame-public-unsigned.wgt. This widget is unsigned and contains public fonts only. Sign with your own Tizen certificates, or use an installer that signs widgets, before installation. See the included notices for asset terms. No signing credentials or TV access were used to build this package.
 
-          The package is built from the tagged source. Source, device-adapter, tooling and public-source checks pass in this workflow. The app changes passed all 420 Chromium checks locally; this build has not been physically tested on a TV.
+          The package is built from the tagged source. Source, device-adapter, tooling and public-source checks pass in this workflow. The icon and navigation changes passed 464 Chromium checks locally. The final Dock material and selector were checked in the browser at 1080p and 720p with normal and reduced motion. This build has not been physically tested on a TV.
           NOTES
-          gh release create "$RELEASE_TAG" dist/CleanFrame-public-unsigned.wgt dist/SHA256SUMS.txt dist/public-export.json dist/LICENSE dist/THIRD_PARTY_NOTICES.md --target "$GITHUB_SHA" --title 'CleanFrame 0.6.2 — Unsigned' --notes-file /tmp/notes.md --latest
+          gh release create "$RELEASE_TAG" dist/CleanFrame-public-unsigned.wgt dist/SHA256SUMS.txt dist/public-export.json dist/LICENSE dist/THIRD_PARTY_NOTICES.md --target "$GITHUB_SHA" --title "CleanFrame ${RELEASE_TAG#v} — Unsigned" --notes-file /tmp/notes.md --latest
