@@ -1040,6 +1040,31 @@ try {
     await current.keyboard.up('Escape'); await current.keyboard.press('Escape');
     check('Released Back reaches Home', (await call('where')).view === 'home');
   });
+  await run('Desert wallpaper stays fixed across restarts', async () => {
+    await page({ minuteMs: 50, seed: baseline({ mode: '5' }) });
+    await wallpaper();
+    const candidate = current.locator('[data-action="wallpaper.choose.desert-night"]');
+    check('User photo appears as a selectable wallpaper', await candidate.count() === 1);
+    await nav(...Array(walls.length).fill('down')); await wallpaperSettled('desert-night');
+    await nav('ok'); await ready();
+    check('Selecting the photo saves its complete material bundle', (await stored()).wall === 'desert-night' && Object.values(await wallpaperBundle()).every(src => src.includes('/desert-night')));
+    await nav('back'); await act('background.rotation');
+    check('No-rotation choice is explicit', (await current.locator('[data-action="rotation.fixed"]').innerText()).includes('Off — keep this wallpaper'));
+    await act('rotation.fixed'); await scene('home');
+    await current.waitForTimeout(800);
+    check('Turning rotation off cancels the previous timer', (await state()).wallpaper === 'desert-night' && !(await state()).rotation.active && (await stored()).mode === 'fixed');
+    await current.reload(); await ready();
+    await current.waitForTimeout(800);
+    check('Restart retains the photo with rotation off', (await state()).wallpaper === 'desert-night' && (await state()).mode === 'fixed' && !(await state()).rotation.active);
+    await current.evaluate(() => { __setHidden(true); __setHidden(false); window.dispatchEvent(new Event('focus')); });
+    check('Returning Home does not replace the fixed photo', (await state()).wallpaper === 'desert-night');
+    for (const layout of ['list', 'dock']) {
+      for (const material of ['soft', 'frost', 'tint']) {
+        await look({ layout, material, focus: 'glass' });
+        await current.screenshot({ path: out + 'desert-night-' + layout + '-' + material + '.png' });
+      }
+    }
+  });
   await run('Rotation pauses and warm return', async () => {
     await page({ minuteMs: 120 });
     await group('background'); await act('background.rotation'); await act('rotation.5'); await scene('home');

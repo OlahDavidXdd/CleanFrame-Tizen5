@@ -28,6 +28,8 @@ The fifteen photo pages were individually checked on 20 October 2026. Each displ
 
 Photographers retain their rights. Wallpapers, thumbnails, panel backgrounds and material fields derive from the credited photographs and retain their terms. The Unsplash licence permits copying, modification and distribution subject to its restrictions, including on selling unmodified images and building a competing image service.
 
+The additional “Desert at night” wallpaper was supplied by the repository owner on 30 October 2026. Original creator and licence were not provided. It and its derivatives are separate from the Unsplash collection and are not covered by the root code licence.
+
 ## Development dependencies and exports
 
 Development dependencies retain the licences in their npm packages. They are not copied into the TV JavaScript runtime.

@@ -226,5 +226,20 @@ window.CleanFrameWallpapers = [
     "listColumn": 0,
     "dockQuiet": false,
     "clockMist": false
+  },
+  {
+    "id": "desert-night",
+    "name": "Desert at night",
+    "src": "assets/wallpapers/desert-night.jpg",
+    "thumb": "assets/wallpapers/desert-night-thumb.jpg",
+    "tone": "dark",
+    "ut": {
+      "tr": "light",
+      "br": "light"
+    },
+    "frostVeil": 0.12,
+    "listColumn": 0,
+    "dockQuiet": false,
+    "clockMist": false
   }
 ];

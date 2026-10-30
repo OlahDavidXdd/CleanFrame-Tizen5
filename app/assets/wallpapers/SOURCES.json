@@ -148,5 +148,16 @@
     "tone": "light",
     "credit": "Cristina Gottardi",
     "source": "https://unsplash.com/photos/CSpjU6hYo_0"
+  },
+  {
+    "id": "desert-night",
+    "name": "Desert at night",
+    "src": "assets/wallpapers/desert-night.jpg",
+    "thumb": "assets/wallpapers/desert-night-thumb.jpg",
+    "pos": "50% 50%",
+    "tone": "dark",
+    "credit": "User-supplied image; original creator not provided",
+    "source": "User attachment supplied on 2026-10-30",
+    "note": "Desert dunes at night; supplied for use in this launcher. No Unsplash licence is claimed."
   }
 ]
