@@ -16,5 +16,11 @@
     "source": "https://github.com/simple-icons/simple-icons/blob/develop/icons/tubi.svg",
     "licence": "CC0-1.0",
     "note": "Shape unchanged; white fill for launcher."
+  },
+  {
+    "icon": "appstore",
+    "source": "https://github.com/simple-icons/simple-icons/blob/develop/icons/appstore.svg",
+    "licence": "CC0-1.0",
+    "note": "Shape unchanged; white fill for launcher. Used for Apps2Samsung TV-Store at the owner\u2019s request."
   }
 ]

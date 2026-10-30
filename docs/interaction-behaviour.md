@@ -39,6 +39,8 @@ The nine default apps keep their known native IDs. Other installed consumer apps
 
 The panel reads `tizen.application.getAppsInfo` on entry and shows the filtered consumer apps alphabetically. Samsung's visibility flag alone also exposes system utilities, so EP packages, background services, ad players, account utilities, placeholders and duplicates are omitted. Known brands use bundled marks. Other apps use their local installed icon, with initials as a fallback.
 
+Apps2Samsung TV-Store (`A2STVStore.Store`) uses a bundled monochrome App Store mark. Its launch ID and name come from the [upstream manifest](https://github.com/Apps2Samsung/TV-Store/blob/main/tizen-app/config.xml); it remains an optional installed app, with the same icon on Home after a restart. The background service is excluded from the app catalogue.
+
 Tizenbrew Next uses the bundled monochrome YouTube mark. It keeps its installed name and native launch ID, remains separate from stock YouTube, and retains the mark in saved Home entries.
 
 The five-column grid scrolls with remote focus. OK launches an app; its On Home badge shows membership. Up from the first row reaches Apps on Home, which opens the editor. An API failure shows a retry and keeps saved Home choices. Browser previews report that installed-app discovery and launching require the TV.

@@ -88,6 +88,21 @@ test('Tizenbrew Next reuses the YouTube mark and retains its native launch targe
   assert.equal(h.launches[0].id, next.appId);
 });
 
+test('TV-Store recognizes the upstream ID and excludes its background service', () => {
+  const h = harness();
+  let apps;
+  h.device.apps((error, value) => { assert.equal(error, null); apps = value; });
+  h.requests[0].ok([
+    { id: 'A2STVStore.Store', name: 'Apps2Samsung TV-Store', show: false },
+    { id: 'A2STVStore.sdbservice', name: 'TV-Store service', show: true }
+  ]);
+  assert.equal(apps.length, 1);
+  assert.equal(apps[0].brand, 'appstore');
+  assert.equal(apps[0].name, 'Apps2Samsung TV-Store');
+  h.device.launchApp(apps[0].appId, () => {});
+  assert.equal(h.launches[0].id, 'A2STVStore.Store');
+});
+
 test('launch keeps its eight-second deadline independently of discovery', () => {
   const h = harness(), results = [];
   h.device.launchApp('Synthetic.App', error => results.push(error));

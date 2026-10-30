@@ -443,6 +443,33 @@ try {
       await current.screenshot({ path: out + 'tizenbrew-next-' + layout + '.png' });
     }
   });
+  await run('TV-Store uses a monochrome App Store mark', async () => {
+    const storeId = 'A2STVStore.Store', storeName = 'Apps2Samsung TV-Store';
+    await page({ catalog: CATALOG.concat([
+      { id: storeId, name: storeName, show: true },
+      { id: 'A2STVStore.sdbservice', name: 'TV-Store service', show: true }
+    ]) });
+    await library();
+    check('Upstream TV-Store is discoverable without its service', (await state()).catalog.ids.includes(storeId) && !(await state()).catalog.ids.includes('A2STVStore.sdbservice'));
+    const tile = current.locator('[data-action="apps.open.' + storeId + '"]');
+    check('Store uses bundled App Store mark with upstream name', (await tile.innerText()).includes(storeName) && (await tile.innerHTML()).includes('assets/icons/appstore.svg'));
+    await act('apps.open.' + storeId);
+    await current.waitForFunction(() => __tv.calls.length > 0);
+    check('Store launches upstream native ID', (await current.evaluate(() => __tv.calls.at(-1))).id === storeId);
+    await closePage();
+    await page({ catalogFailure: true, seed: baseline({
+      home: ['youtube', storeId],
+      appRecords: [{ id: storeId, appId: storeId, name: storeName, brand: 'appstore' }]
+    }) });
+    for (const layout of ['dock', 'list']) {
+      for (const bg of ['dark', 'light']) {
+        await look({ layout, apps: 'both', bg });
+        const homeTile = current.locator('[data-action="home.app.' + storeId + '"]:visible');
+        check('Saved store retains the App Store mark in ' + layout + '/' + bg, (await homeTile.innerHTML()).includes('assets/icons/appstore.svg') && (await homeTile.innerText()).includes(storeName));
+        await current.screenshot({ path: out + 'tv-store-' + layout + '-' + bg + '.png' });
+      }
+    }
+  });
   await run('Independent app identity self-filter', async () => {
     const appId = 'AbCdEf1234.MyHome';
     await page({ currentAppId: appId, catalog: CATALOG.filter(a => a.id !== 'nClrkHome1.FrameHome').concat({ id: appId, name: 'Family Home', show: true }) });

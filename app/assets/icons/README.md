@@ -5,3 +5,5 @@ Brand marks identify their respective services in CleanFrame. They are not endor
 Simple Icons sources are CC0; trademarks remain with their owners. Custom Brand Icons retains its MIT licence; this source record does not grant trademark rights. See SOURCES.json for exact revisions and adaptations.
 
 Prime uses the two smile subpaths, not clipped wordmark text. Apple Music uses the note subpath without the outer app tile. These are intentional simplified marks beside full service names. Simple Icons CC0 and Custom Brand Icons MIT texts are included here. The old Australian TV source GPL text is retained for provenance only; no current icon uses that source.
+
+TV-Store uses the App Store A glyph at the owner’s request, without the blue tile. It follows the same mask colour and offline optical sizing as other service marks. Its source is recorded in ADDITIONAL-SOURCES.json.
