@@ -470,6 +470,68 @@ try {
       }
     }
   });
+  await run('Icon appearance is explicit, independent and persistent', async () => {
+    const nextId = 'Next123456.Client', aquaId = 'remapped.AquaPlayer';
+    const records = [
+      { id: nextId, appId: nextId, name: 'Tizenbrew Next', brand: 'youtube' },
+      { id: 'A2STVStore.Store', appId: 'A2STVStore.Store', name: 'Apps2Samsung TV-Store', brand: 'appstore' },
+      { id: aquaId, appId: aquaId, name: 'AquaPlay IPTV', brand: 'aquaplay' }
+    ];
+    await page({
+      seed: baseline({ home: ['youtube', nextId, 'A2STVStore.Store', aquaId], appRecords: records }),
+      catalog: CATALOG.concat(records.map(a => ({ id: a.appId, name: a.name, show: true })))
+    });
+    check('Existing preferences default to White', (await state()).look.iconStyle === 'white');
+    await group('layout');
+    const choices = await Promise.all(['white', 'light', 'dark'].map(v => current.locator('[data-action="choice.iconStyle.' + v + '"]:visible').count()));
+    check('All icon appearance choices are visible', choices.every(n => n === 1));
+    const before = await settingsSnapshot();
+    await nav('down', 'down', 'down', 'right');
+    check('Browsing icon styles never saves on focus', same(await settingsSnapshot(), before));
+    for (const value of ['light', 'dark', 'white']) {
+      await act('choice.iconStyle.' + value); await ready();
+      const s = await state();
+      check('Explicit choice persists ' + value, s.look.iconStyle === value && (await stored()).look.iconStyle === value);
+      check('Icon style keeps background and wallpaper', s.committed.bg === before.committed.bg && s.committed.wall === before.committed.wall);
+      for (const layout of ['dock', 'list']) {
+        await look({ layout }); await scene('home');
+        const youtube = current.locator('[data-action="home.app.youtube"]:visible');
+        const nextTile = current.locator('[data-action="home.app.' + nextId + '"]:visible');
+        if (value !== 'white') {
+          check('YouTube and Next share the exact ' + value + ' icon in ' + layout, (await youtube.locator('.app-icon img').getAttribute('src')) === (await nextTile.locator('.app-icon img').getAttribute('src')));
+          check('Custom store and AquaPlay use ' + value + ' tiles in ' + layout, await current.locator('[data-action="home.app.' + aquaId + '"]:visible .app-icon img').count() === 1 && await current.locator('[data-action="home.app.A2STVStore.Store"]:visible .app-icon img').count() === 1);
+        } else check('White restores standalone service marks in ' + layout, await youtube.locator('[data-mark="youtube"]').count() === 1 && await nextTile.locator('[data-mark="youtube"]').count() === 1);
+      }
+      await group('layout');
+    }
+    await act('choice.iconStyle.dark'); await ready();
+    for (const bg of ['dark', 'light', 'photo']) {
+      await look({ bg });
+      check('Background ' + bg + ' leaves icon appearance independent', (await state()).look.iconStyle === 'dark');
+    }
+    await library();
+    check('All apps uses the selected icon style', await current.locator('[data-action="apps.open.' + aquaId + '"] .app-icon[data-icon-style="dark"]').count() === 1);
+    await scene('editor');
+    check('Home editor uses the selected icon style', await current.locator('.er [data-icon-style="dark"]').count() === 4);
+    await current.reload(); await ready();
+    check('Restart restores chosen icon appearance', (await state()).look.iconStyle === 'dark');
+    await group('layout'); const committed = await settingsSnapshot();
+    await current.evaluate(() => { __failWrites = true; });
+    await act('choice.iconStyle.light');
+    check('Failed save retains prior icon style', (await state()).look.iconStyle === 'dark' && (await settingsSnapshot()).stored === committed.stored);
+    await current.evaluate(() => { __failWrites = false; }); await act('settings.retry'); await ready();
+    check('Retry explicitly applies icon appearance', (await state()).look.iconStyle === 'light');
+    await look({ wall: 'desert-night', layout: 'dock', apps: 'both', focus: 'glass' }); await scene('home');
+    for (const material of ['soft', 'frost', 'tint']) {
+      await look({ material });
+      const edge = await current.locator('#dock .mat').evaluate(el => ({ before: getComputedStyle(el, '::before').display, after: getComputedStyle(el, '::after').boxShadow }));
+      check('Dock has no corner flare in ' + material, edge.before === 'none' && !edge.after.includes('20px'));
+    }
+    for (const iconStyle of ['white', 'light', 'dark']) {
+      await look({ iconStyle });
+      await current.screenshot({ path: out + 'icon-appearance-' + iconStyle + '.png' });
+    }
+  });
   await run('Independent app identity self-filter', async () => {
     const appId = 'AbCdEf1234.MyHome';
     await page({ currentAppId: appId, catalog: CATALOG.filter(a => a.id !== 'nClrkHome1.FrameHome').concat({ id: appId, name: 'Family Home', show: true }) });

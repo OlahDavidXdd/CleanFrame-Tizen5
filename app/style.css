@@ -633,3 +633,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 .l-list .quiet-utils.is-text .u-content>*+*{margin-left:0;margin-right:0}
 .quiet-utils.is-text .u-content>*+*{margin-left:0}
 .l-list .quiet-utils.is-text .u .u-content>*+*{margin-right:0}
+
+/* Coloured app tiles use the same bounds as the monochrome marks. */
+.mark.app-icon{background:none;overflow:visible}
+.mark.app-icon img{position:absolute;display:block;object-fit:contain;border-radius:22%;max-width:none}
+.detail-layout .setting-section+.setting-section{margin-top:24px}
+/* Quiet glass: one restrained top edge, no corner flares or glossy focus tile. */
+.bg-photo .dock .mat{background:rgba(12,16,22,.10);box-shadow:0 12px 32px rgba(0,0,0,.12)}
+.bg-photo .dock .mat-img{opacity:.78}
+.bg-photo .dock .mat::before{display:none}
+.bg-photo .dock .mat::after{border-radius:inherit;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.bg-photo .dock .plate.on-focus,.bg-photo.db-quiet .dock .plate.on-focus{background:rgba(172,180,191,.22);box-shadow:none}
