@@ -1,0 +1,60 @@
+name: Build unsigned release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag matching the package version
+        required: true
+        default: v0.6.2
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate release version
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          version = json.loads(Path('package.json').read_text())['version']
+          assert os.environ['RELEASE_TAG'] == 'v' + version, 'Tag must match package version'
+          PY
+      - run: npm ci
+      - run: npm run check
+      - run: npm run check:tools
+      - run: npm run check:public
+      - run: npm run export:public
+      - name: Checksum
+        run: cd dist && sha256sum CleanFrame-public-unsigned.wgt > SHA256SUMS.txt
+      - name: Retain unsigned build
+        uses: actions/upload-artifact@v4
+        with:
+          name: CleanFrame-public-unsigned
+          path: dist/
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          cat > /tmp/notes.md <<'NOTES'
+          CleanFrame 0.6.2 includes matching Tizenbrew Next and TV-Store icons, the selectable Desert at night wallpaper, and Off — keep this wallpaper for persistent wallpaper selection without rotation.
+
+          Download CleanFrame-public-unsigned.wgt. This widget is unsigned and contains public fonts only. Sign with your own Tizen certificates, or use an installer that signs widgets, before installation. See the included notices for asset terms. No signing credentials or TV access were used to build this package.
+
+          The package is built from the tagged source. Source, device-adapter, tooling and public-source checks pass in this workflow. The app changes passed all 420 Chromium checks locally; this build has not been physically tested on a TV.
+          NOTES
+          gh release create "$RELEASE_TAG" dist/CleanFrame-public-unsigned.wgt dist/SHA256SUMS.txt dist/public-export.json dist/LICENSE dist/THIRD_PARTY_NOTICES.md --target "$GITHUB_SHA" --title 'CleanFrame 0.6.2 — Unsigned' --notes-file /tmp/notes.md --latest
