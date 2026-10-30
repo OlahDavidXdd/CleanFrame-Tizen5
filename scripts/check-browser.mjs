@@ -532,6 +532,32 @@ try {
       await current.screenshot({ path: out + 'icon-appearance-' + iconStyle + '.png' });
     }
   });
+  await run('Compact Dock fits nine apps and keeps names reachable', async () => {
+    await page();
+    for (const width of [1920, 1280]) {
+      await current.setViewportSize({ width, height: width * 9 / 16 });
+      for (const apps of ['icons', 'both']) {
+        await look({ layout: 'dock', apps, iconStyle: 'dark' }); await scene('home');
+        await current.waitForTimeout(240);
+        const icons = await current.locator('#dock .tile .mark').evaluateAll(elements => {
+          const clip = document.getElementById('shelf').getBoundingClientRect();
+          return elements.map(el => { const r = el.getBoundingClientRect(); return r.left >= clip.left - 1 && r.right <= clip.right + 1; });
+        });
+        check('All nine apps fit the compact ' + apps + ' Dock at ' + width, icons.length === 9 && icons.every(Boolean), icons);
+        await nav(...Array(12).fill('right'));
+        check('Remote reaches the last app without wrapping at ' + width + '/' + apps, (await state()).selected === PRIMARY.at(-1) && (await call('where')).focusCount === 1);
+        await nav(...Array(12).fill('left'));
+        check('Remote returns to the first app without wrapping at ' + width + '/' + apps, (await state()).selected === PRIMARY[0]);
+        if (apps === 'icons') {
+          const tooltip = await current.locator('#appFocusName').evaluate(el => {
+            const r = el.getBoundingClientRect(), dock = document.getElementById('dock').getBoundingClientRect();
+            return { name: el.textContent, visible: el.classList.contains('is-on'), above: r.bottom <= dock.top, inFrame: r.left >= 0 && r.right <= innerWidth };
+          });
+          check('Icons mode reveals a name above the Dock at ' + width, tooltip.name === 'Stremio' && tooltip.visible && tooltip.above && tooltip.inFrame, tooltip);
+        }
+      }
+    }
+  });
   await run('Independent app identity self-filter', async () => {
     const appId = 'AbCdEf1234.MyHome';
     await page({ currentAppId: appId, catalog: CATALOG.filter(a => a.id !== 'nClrkHome1.FrameHome').concat({ id: appId, name: 'Family Home', show: true }) });

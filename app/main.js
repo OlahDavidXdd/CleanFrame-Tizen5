@@ -5,7 +5,7 @@
   /* ---------- Bundled data ---------- */
   var ASSETS = 'assets/', ICONS = ASSETS + 'icons/', WP = ASSETS + 'wallpapers/';
   var CAP = 9, SCRIM_Y = 560;
-  var DOCK_MODES = { both: { tw: 288, th: 200, pitch: 296 }, text: { tw: 288, th: 104, pitch: 296 }, icons: { tw: 176, th: 144, pitch: 184 } };
+  var DOCK_MODES = { both: { tw: 176, th: 172, pitch: 184 }, text: { tw: 244, th: 96, pitch: 252 }, icons: { tw: 144, th: 136, pitch: 152 } };
   var GRID_ROW = 240, GRID_COL = 344, COLS = 5;
   var ED_ROW = 80, ED_SEP = 56, ED_VIEW = 752;
   var PH_TOP = 220, PH_PITCH = 128, PH_FULL = 5, PH_HEIGHT = 944, PH_COMPACT_TOP = 144, PH_COMPACT_PITCH = 88, PH_COMPACT_VISIBLE = 9;
@@ -162,7 +162,7 @@
       opsz: serif ? role === 'display' ? 72 : role === 'clock' ? 48 : role === 'ui' && (!size || size === 28) ? 28 : 36 : 0 };
   }
   function measureFace(id, faces) {
-    var result = { roles: {}, digits: [], digitCell: 0 }, roles = { display: [88, 76, 56], clock: [48], primary: [30, 32, 34, 36, 40], ui: [28, 30, 48] };
+    var result = { roles: {}, digits: [], digitCell: 0 }, roles = { display: [88, 76, 56], clock: [48], primary: [24, 28, 30, 32, 34, 36, 40], ui: [28, 30, 48] };
     var face = id === 'newsreader' ? faces[0][0] : null, original = face ? face.variationSettings : '', r, widths, min, max;
     Object.keys(roles).forEach(function (role) {
       result.roles[role] = {};
@@ -274,8 +274,8 @@
     if (fontMetrics[id] && !fontMetrics[id].fallback) widthCache[key] = width;
     return width;
   }
-  function dockLabelSize(id) { return S.c.apps === 'text' ? (textWidth(app(id).name, 40, 600, -.8, 'primary') > 264 ? 34 : 40) : textWidth(app(id).name, 36, 500, -.8, 'primary') > 280 ? 32 : 36; }
-  function reducedDockLabel(id) { return S.c.apps !== 'icons' && dockLabelSize(id) === (S.c.apps === 'text' ? 34 : 32); }
+  function dockLabelSize(id) { return S.c.apps === 'text' ? (textWidth(app(id).name, 36, 600, -.6, 'primary') > 220 ? 30 : 36) : textWidth(app(id).name, 28, 500, -.4, 'primary') > 160 ? 24 : 28; }
+  function reducedDockLabel(id) { return S.c.apps !== 'icons' && dockLabelSize(id) === (S.c.apps === 'text' ? 30 : 24); }
   function actionWidth(text) { return clamp(Math.ceil(textWidth(text, 30, 500, -.3) + 40), 288, 400); }
   function photoLabel(id, compact) {
     var text = app(id).name, size = compact ? 56 : 88, limit = compact ? 640 : 992, width = textWidth(text, size, 600, -1.8, 'display');
@@ -1075,7 +1075,7 @@
   }
   function renderCaption(t, hs) {
     var html = '<span class="clock">' + clockHtml() + '</span>';
-    if (S.c.apps !== 'icons' && hs.items[hs.i] && (S.c.layout === 'list' ? photoLabel(hs.items[hs.i].id, false).size < 88 || photoLabel(hs.items[hs.i].id, false).ellipsis : hs.zone === 'apps' && reducedDockLabel(hs.items[hs.i].id))) html += '<span class="cap-line full-name">' + esc(app(hs.items[hs.i].id).name) + '</span>';
+    if (S.c.layout === 'list' && S.c.apps !== 'icons' && hs.items[hs.i] && (photoLabel(hs.items[hs.i].id, false).size < 88 || photoLabel(hs.items[hs.i].id, false).ellipsis)) html += '<span class="cap-line full-name">' + esc(app(hs.items[hs.i].id).name) + '</span>';
     setHTML(caption, html);
   }
 
@@ -1144,30 +1144,30 @@
     utPlates[utPlateIndex].className = 'ph-plate ut-lens is-current on-focus';
   }
   function renderAppFocusName(hs) {
-    var it = hs.items[hs.i], width, x, y, placement;
-    if (S.c.apps !== 'icons' || hs.mode !== 'browse' || hs.zone !== 'apps' || !it) { appFocusName.className = 'app-focus-name'; return; }
+    var it = hs.items[hs.i], width, x, y, placement, dockLabel = S.c.layout === 'dock' && it && (S.c.apps === 'icons' || reducedDockLabel(it.id));
+    if ((!dockLabel && S.c.apps !== 'icons') || hs.mode !== 'browse' || hs.zone !== 'apps' || !it) { appFocusName.className = 'app-focus-name'; return; }
     appFocusName.textContent = app(it.id).name;
-    width = Math.min(S.c.layout === 'list' ? 1056 : 1640, Math.ceil(textWidth(app(it.id).name, S.c.layout === 'list' ? 40 : 36, 500, -.6, 'primary') + 8));
+    width = Math.min(S.c.layout === 'list' ? 1056 : 1640, Math.ceil(textWidth(app(it.id).name, S.c.layout === 'list' ? 40 : 36, 500, -.6, 'primary') + (S.c.layout === 'dock' ? 40 : 8)));
     appFocusName.style.width = width + 'px';
     if (S.c.layout === 'list') {
       x = 280; placement = phFields[photoPlateIndex]._placement;
       y = placement.y + placement.height / 2 - 24;
     } else {
-      x = clamp(dockAnchorCenter - width / 2, 140, 1780 - width); y = 932;
+      x = clamp(dockAnchorCenter - width / 2, 140, 1780 - width); y = parseFloat(dock.style.top) - 76;
     }
     appFocusName.style.left = x + 'px'; appFocusName.style.top = (y + fontShift('primary', S.c.layout === 'list' ? 40 : 36)) + 'px';
     appFocusName.className = 'app-focus-name is-on';
   }
 
   function dockGeom(n) {
-    var m = DOCK_MODES[S.c.apps], vis = Math.max(1, Math.min(5, n)), shelfW = vis * m.pitch - 8, w = shelfW + 32;
-    var broad = S.geom === 'broad' && n > 5;
+    var m = DOCK_MODES[S.c.apps], vis = Math.max(1, Math.min(Math.floor(1696 / m.pitch), n)), shelfW = vis * m.pitch - 8, w = shelfW + 32;
+    var broad = S.geom === 'broad' && n > vis;
     if (n < 0) { w = 912; shelfW = 880; }
     else if (broad) { w = 1728; shelfW = 1696; }
-    return { x: Math.round((1920 - w) / 2), y: 908 - m.th - 32, h: m.th + 32, w: w, shelf: shelfW, vis: vis, broad: broad, empty: n < 0, tw: m.tw, th: m.th, pitch: m.pitch };
+    return { x: Math.round((1920 - w) / 2), y: 1000 - m.th - 32, h: m.th + 32, w: w, shelf: shelfW, vis: vis, broad: broad, empty: n < 0, tw: m.tw, th: m.th, pitch: m.pitch };
   }
-  /* Five centred: the window moves one tile when focus passes an edge. Broad: keep a
-     148px glimpse of the neighbour, as the current dock does. */
+  /* Size the tray to its contents. Text-heavy rows that overflow keep a glimpse
+     of the next app and scroll with remote focus. */
   function dockOffset(n, i, g) {
     var off, left, first, glimpse = g.tw / 2;
     if (g.broad) {
@@ -1188,8 +1188,8 @@
     var a, body;
     if (it.kind === 'add') return '<span class="add">' + icon('plus') + '</span><span class="label">' + (full ? 'Home is full' : 'Add app') + '</span>';
     a = app(it.id);
-    body = S.c.apps === 'text' ? '' : appMark(a, S.c.apps === 'icons' ? 136 : 120, S.c.apps === 'icons' ? 88 : 72, S.c.apps === 'icons' ? 72 : 58);
-    return body + (S.c.apps === 'icons' ? '' : '<span class="label" style="font-size:' + dockLabelSize(a.id) + 'px;top:' + ((S.c.apps === 'text' ? 28 : 128) + fontShift('primary', dockLabelSize(a.id))) + 'px"><span class="label-ink">' + esc(a.name) + '</span></span>') + '<span class="nudge nudge-l">' + icon('left') + '</span><span class="nudge nudge-r">' + icon('right') + '</span>';
+    body = S.c.apps === 'text' ? '' : appMark(a, 104, 104, 88);
+    return body + (S.c.apps === 'icons' ? '' : '<span class="label" style="font-size:' + dockLabelSize(a.id) + 'px;top:' + ((S.c.apps === 'text' ? 24 : 126) + fontShift('primary', dockLabelSize(a.id))) + 'px"><span class="label-ink">' + esc(a.name) + '</span></span>') + '<span class="nudge nudge-l">' + icon('left') + '</span><span class="nudge nudge-r">' + icon('right') + '</span>';
   }
   /* A wide label can reach the shelf before its icon. Check the rendered icon box,
      including during the track's 180ms transition, so both disappear together. */

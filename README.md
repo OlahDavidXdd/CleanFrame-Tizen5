@@ -30,6 +30,7 @@ The public preview uses the included Manrope, Geist and Newsreader fonts.
 - Choose a List or Dock layout, with icons, names or both.
 - Use a photograph, light or dark background, with a simple 12-hour clock.
 - Adjust typography, focus and glass materials through the same Settings interface.
+- Use a compact floating Dock with optional labels and White, Light or Dark icon appearance.
 - Choose and reorder Home apps; discover installed apps on the TV.
 - Select from sixteen wallpapers and save your preferences locally.
 
