@@ -89,6 +89,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 .fv-5{--fv:.44}
 .m-tint .mat-veil{background:rgba(8,14,18,.3)}
 .tone-light.m-tint .mat-veil{background:rgba(8,14,18,.38)}
+/* Mirror: lighter, more see-through tint with a soft top sheen, no bottom scrim. */
+.m-mirror .mat-scrim{display:none}
+.m-mirror .mat-veil{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,0)),rgba(70,70,78,.14)}
+.tone-light.m-mirror .mat-veil{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,0)),rgba(70,70,78,.20)}
+.m-mirror .mat::after{box-shadow:inset 0 0 0 .5px rgba(255,255,255,.16),inset 0 .5px .5px rgba(255,255,255,.2)}
 /* One edge: a top hairline that follows the radius. No lower highlight, no outer shadow. */
 .mat::after{content:"";position:absolute;left:0;top:0;right:0;bottom:0;border-radius:48px;box-shadow:inset 0 1px 0 rgba(255,255,255,.24);pointer-events:none}
 .shelf{position:absolute;left:16px;top:0;bottom:0;width:1472px;overflow:hidden}
